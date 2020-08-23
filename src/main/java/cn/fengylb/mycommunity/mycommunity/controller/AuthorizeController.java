@@ -39,7 +39,7 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String accessToekn = githubProvider.getAccessToekn(accessTokenDTO);
         GithubUserDTO githubUserDTO = githubProvider.getUser(accessToekn);
-        System.out.println(githubUserDTO.getName());
+        //System.out.println(githubUserDTO.getName());
         if (githubUserDTO != null){
             User user  = new User();
             user.setAccountId(String.valueOf(githubUserDTO.getId()));
