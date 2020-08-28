@@ -1,5 +1,6 @@
 package cn.fengylb.mycommunity.mycommunity.service;
 
+import cn.fengylb.mycommunity.mycommunity.dto.PaginationDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.Question;
 import cn.fengylb.mycommunity.mycommunity.dto.QuestionDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.User;
@@ -19,8 +20,15 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDTO> list(){
-        List<Question> questions = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size){
+        if (page < 1){
+            page = 1;
+        }
+        if (size < 1){
+            size = 5;
+        }
+        int offset = (page -1)*size;
+        List<Question> questions = questionMapper.list(offset,size);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         questions.stream().forEach(question -> {
             User user = userMapper.findById(question.getCreator().intValue());
@@ -29,6 +37,10 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOS.add(questionDTO);
         });
-        return questionDTOS;
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setQuestions(questionDTOS);
+        Integer questionsCount = questionMapper.listCount();
+        paginationDTO.setPagination(page,size,questionsCount);
+        return paginationDTO;
     }
 }

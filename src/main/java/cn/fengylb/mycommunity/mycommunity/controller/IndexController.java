@@ -1,5 +1,6 @@
 package cn.fengylb.mycommunity.mycommunity.controller;
 
+import cn.fengylb.mycommunity.mycommunity.dto.PaginationDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.QuestionDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.User;
 import cn.fengylb.mycommunity.mycommunity.mapper.UserMapper;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +22,7 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
     @GetMapping("/")
-    public String index(HttpServletRequest request, Model model){
+    public String index(HttpServletRequest request, Model model, @RequestParam(value = "page",defaultValue = "1")Integer page, @RequestParam(value = "size",defaultValue = "2")Integer size){
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0){
             for (Cookie cookie : cookies){
@@ -33,8 +35,8 @@ public class IndexController {
                 }
             }
         }
-        List<QuestionDTO> questionDTOS = questionService.list();
-        model.addAttribute("questions",questionDTOS);
+        PaginationDTO paginationDTO = questionService.list(page,size);
+        model.addAttribute("pagination",paginationDTO);
         return "index";
     }
 }
