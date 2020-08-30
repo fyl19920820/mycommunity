@@ -5,6 +5,7 @@ import cn.fengylb.mycommunity.mycommunity.dto.GithubUserDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.User;
 import cn.fengylb.mycommunity.mycommunity.mapper.UserMapper;
 import cn.fengylb.mycommunity.mycommunity.provider.GithubProvider;
+import cn.fengylb.mycommunity.mycommunity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class AuthorizeController {
     @Value("${github.redirect.url}")
     private String redirect_url;
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
     @GetMapping("/callback")
     public String callback(@RequestParam("code")String code, @RequestParam("state")String state, HttpServletRequest request, HttpServletResponse response){
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
@@ -49,11 +50,24 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUserDTO.getAvatarUrl());
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             //request.getSession().setAttribute("user",githubUserDTO);
         }else {
 
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null && cookies.length > 0){
+            for (Cookie cookie : cookies){
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
         }
         return "redirect:/";
     }
