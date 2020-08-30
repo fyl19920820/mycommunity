@@ -1,10 +1,7 @@
 package cn.fengylb.mycommunity.mycommunity.mapper;
 
 import cn.fengylb.mycommunity.mycommunity.dto.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper {

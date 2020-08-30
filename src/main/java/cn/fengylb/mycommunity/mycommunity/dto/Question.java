@@ -14,6 +14,7 @@ public class Question {
     private Long gmtCreate;
     private Long gmtModified;
     private Long creator;
+    private String accountId;
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;
