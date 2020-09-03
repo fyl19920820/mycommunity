@@ -1,6 +1,7 @@
 package cn.fengylb.mycommunity.mycommunity.service;
 
 import cn.fengylb.mycommunity.mycommunity.dto.*;
+import cn.fengylb.mycommunity.mycommunity.exception.CustomizeException;
 import cn.fengylb.mycommunity.mycommunity.mapper.QuestionMapper;
 import cn.fengylb.mycommunity.mycommunity.mapper.UserMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -78,6 +79,9 @@ public class QuestionService {
 
     public QuestionDTO findById(Long id) {
         Question  question = questionMapper.selectByPrimaryKey(id.intValue());
+        if (question == null){
+            throw new CustomizeException("问题已不存在");
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         UserExample userExample = new UserExample();
