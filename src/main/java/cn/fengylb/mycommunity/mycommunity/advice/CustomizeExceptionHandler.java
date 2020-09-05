@@ -17,6 +17,7 @@ public class CustomizeExceptionHandler {
         }else {
             model.addAttribute("message","没有确定的问题，需要找管理员");
         }
+        ex.printStackTrace();
         return new ModelAndView("error");
     }
 }

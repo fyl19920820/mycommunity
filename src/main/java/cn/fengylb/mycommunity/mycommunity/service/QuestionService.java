@@ -2,6 +2,7 @@ package cn.fengylb.mycommunity.mycommunity.service;
 
 import cn.fengylb.mycommunity.mycommunity.dto.*;
 import cn.fengylb.mycommunity.mycommunity.exception.CustomizeException;
+import cn.fengylb.mycommunity.mycommunity.mapper.QuestionExtMapper;
 import cn.fengylb.mycommunity.mycommunity.mapper.QuestionMapper;
 import cn.fengylb.mycommunity.mycommunity.mapper.UserMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -18,6 +19,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size){
         if (page < 1){
@@ -77,8 +80,8 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO findById(Long id) {
-        Question  question = questionMapper.selectByPrimaryKey(id.intValue());
+    public QuestionDTO findById(Integer id) {
+        Question  question = questionMapper.selectByPrimaryKey(id);
         if (question == null){
             throw new CustomizeException("问题已不存在");
         }
@@ -109,5 +112,12 @@ public class QuestionService {
             questionExample.createCriteria().andIdEqualTo(question.getId());
             questionMapper.updateByExampleSelective(question1,questionExample);
         }
+    }
+
+    public void incViewCount(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incViewCount(question);
     }
 }

@@ -64,13 +64,16 @@ public class PublishController {
         question.setTag(tag);
         question.setCreator(user.getId());
         question.setAccountId(user.getAccountId());
+        question.setViewCount(0);
+        question.setCommentCount(0);
+        question.setLikeCount(0);
         questionService.createOrUpdate(question);
         return "redirect:/";
 
     }
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable("id")Long id,Model model){
+    public String edit(@PathVariable("id")Integer id,Model model){
         QuestionDTO questionDTO = questionService.findById(id);
         model.addAttribute("title", questionDTO.getTitle());
         model.addAttribute("description", questionDTO.getDescription());
