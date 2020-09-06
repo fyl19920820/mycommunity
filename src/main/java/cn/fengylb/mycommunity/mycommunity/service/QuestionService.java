@@ -34,7 +34,7 @@ public class QuestionService {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         questions.stream().forEach(question -> {
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdEqualTo(question.getCreator().intValue());
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
             List<User> users = userMapper.selectByExample(userExample);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);
@@ -64,7 +64,7 @@ public class QuestionService {
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         questions.stream().forEach(question -> {
             UserExample userExample = new UserExample();
-            userExample.createCriteria().andIdEqualTo(question.getCreator().intValue());
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
             List<User> users = userMapper.selectByExample(userExample);
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question,questionDTO);
@@ -80,7 +80,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO findById(Integer id) {
+    public QuestionDTO findById(Long id) {
         Question  question = questionMapper.selectByPrimaryKey(id);
         if (question == null){
             throw new CustomizeException("问题已不存在");
@@ -88,7 +88,7 @@ public class QuestionService {
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andIdEqualTo(question.getCreator().intValue());
+        userExample.createCriteria().andIdEqualTo(question.getCreator());
         List<User> users = userMapper.selectByExample(userExample);
         if (users != null && users.size() == 1){
             questionDTO.setUser(users.get(0));
@@ -114,7 +114,7 @@ public class QuestionService {
         }
     }
 
-    public void incViewCount(Integer id) {
+    public void incViewCount(Long id) {
         Question question = new Question();
         question.setId(id);
         question.setViewCount(1);
