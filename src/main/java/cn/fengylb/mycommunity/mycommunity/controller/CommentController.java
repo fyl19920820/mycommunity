@@ -7,6 +7,7 @@ import cn.fengylb.mycommunity.mycommunity.dto.User;
 import cn.fengylb.mycommunity.mycommunity.exception.CustomizeErrorCode;
 import cn.fengylb.mycommunity.mycommunity.exception.CustomizeException;
 import cn.fengylb.mycommunity.mycommunity.service.CommentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,9 @@ public class CommentController {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null){
             throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
+        }
+        if (commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())){
+            throw new CustomizeException(CustomizeErrorCode.CONTENT_IS_EMPTY);
         }
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());
