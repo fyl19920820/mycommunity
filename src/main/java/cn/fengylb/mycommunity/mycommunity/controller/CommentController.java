@@ -35,6 +35,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setLikeCount(0L);
+        comment.setCommentCount(0);
         commentService.insert(comment);
         return ResultDTO.okOf();
     }
