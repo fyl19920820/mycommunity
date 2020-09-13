@@ -2,6 +2,7 @@ package cn.fengylb.mycommunity.mycommunity.controller;
 
 import cn.fengylb.mycommunity.mycommunity.dto.CommentDTO;
 import cn.fengylb.mycommunity.mycommunity.dto.QuestionDTO;
+import cn.fengylb.mycommunity.mycommunity.enums.CommentTypeEnum;
 import cn.fengylb.mycommunity.mycommunity.service.CommentService;
 import cn.fengylb.mycommunity.mycommunity.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     private String question(@PathVariable(name = "id")Long id, Model model){
         QuestionDTO questionDTO =  questionService.findById(id);
-        List<CommentDTO> commentDTOList = commentService.listByQuestionId(id);
+        List<CommentDTO> commentDTOList = commentService.listByTargetId(id,CommentTypeEnum.QUESTION);
         questionService.incViewCount(id);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments",commentDTOList);
