@@ -24,4 +24,7 @@
   <update id="incCommentCount" parameterType="cn.fengylb.mycommunity.mycommunity.dto.Question">
     update question set COMMENT_COUNT = COMMENT_COUNT + #{commentCount} where id = #{id}
   </update>
+  <select id="selectRelated" parameterType="cn.fengylb.mycommunity.mycommunity.dto.Question" resultMap="BaseResultMap">
+        select * from QUESTION where id != #{id} and tag regexp #{tag}
+    </select>
 </mapper>
