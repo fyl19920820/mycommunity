@@ -49,8 +49,38 @@ public class QuestionService {
             questionDTOS.add(questionDTO);
         });
         PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setQuestions(questionDTOS);
+        paginationDTO.setData(questionDTOS);
         Integer questionsCount = (int)questionMapper.countByExample(new QuestionExample());
+        paginationDTO.setPagination(page,size,questionsCount);
+        return paginationDTO;
+    }
+
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
+        if (page < 1){
+            page = 1;
+        }
+        if (size < 1){
+            size = 5;
+        }
+        int offset = (page -1)*size;
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria().andCreatorEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        questions.stream().forEach(question -> {
+            UserExample userExample = new UserExample();
+            userExample.createCriteria().andIdEqualTo(question.getCreator());
+            List<User> users = userMapper.selectByExample(userExample);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            if (users != null && users.size() == 1){
+                questionDTO.setUser(users.get(0));
+            }
+            questionDTOS.add(questionDTO);
+        });
+        PaginationDTO paginationDTO = new PaginationDTO();
+        paginationDTO.setData(questionDTOS);
+        Integer questionsCount = (int)questionMapper.countByExample(questionExample);
         paginationDTO.setPagination(page,size,questionsCount);
         return paginationDTO;
     }
@@ -79,7 +109,7 @@ public class QuestionService {
             questionDTOS.add(questionDTO);
         });
         PaginationDTO paginationDTO = new PaginationDTO();
-        paginationDTO.setQuestions(questionDTOS);
+        paginationDTO.setData(questionDTOS);
         Integer questionsCount = (int)questionMapper.countByExample(questionExample);
         paginationDTO.setPagination(page,size,questionsCount);
         return paginationDTO;
