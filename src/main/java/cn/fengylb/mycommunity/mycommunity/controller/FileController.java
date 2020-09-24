@@ -1,6 +1,8 @@
 package cn.fengylb.mycommunity.mycommunity.controller;
 
 import cn.fengylb.mycommunity.mycommunity.dto.FileDTO;
+import cn.fengylb.mycommunity.mycommunity.exception.CustomizeErrorCode;
+import cn.fengylb.mycommunity.mycommunity.exception.CustomizeException;
 import cn.fengylb.mycommunity.mycommunity.provider.TXCloudProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ public class FileController {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile multipartFile = multipartRequest.getFile("editormd-image-file");
         File file = new File("E:/"+multipartFile.getOriginalFilename());
+        String fileUrl="";
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             InputStream inputStream = multipartFile.getInputStream();
@@ -39,16 +42,17 @@ public class FileController {
                 fileOutputStream.write(bytes,0,i);
             }
 
-            txCloudProvider.upload(file,file.getName(),multipartFile.getContentType());
+            fileUrl = txCloudProvider.upload(file, file.getName(), multipartFile.getContentType());
             fileOutputStream.close();
             inputStream.close();
-            file.deleteOnExit();
+            file.delete();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
         FileDTO fileDTO = new FileDTO();
         fileDTO.setSuccess(1);
-        fileDTO.setUrl("/images/wechat.png");
+        fileDTO.setUrl(fileUrl);
         return fileDTO;
     }
 }
