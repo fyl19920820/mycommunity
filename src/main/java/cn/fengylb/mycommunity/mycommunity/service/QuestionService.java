@@ -25,7 +25,11 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO list(Integer page, Integer size){
+    public PaginationDTO list(String search,Integer page, Integer size){
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
         if (page < 1){
             page = 1;
         }
@@ -33,9 +37,14 @@ public class QuestionService {
             size = 5;
         }
         int offset = (page -1)*size;
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
+
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
+
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOS = new ArrayList<>();
         questions.stream().forEach(question -> {
             UserExample userExample = new UserExample();
@@ -50,8 +59,7 @@ public class QuestionService {
         });
         PaginationDTO paginationDTO = new PaginationDTO();
         paginationDTO.setData(questionDTOS);
-        Integer questionsCount = (int)questionMapper.countByExample(new QuestionExample());
-        paginationDTO.setPagination(page,size,questionsCount);
+        paginationDTO.setPagination(page,size,totalCount);
         return paginationDTO;
     }
 
