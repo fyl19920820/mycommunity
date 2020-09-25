@@ -6,6 +6,7 @@ import cn.fengylb.mycommunity.mycommunity.dto.User;
 import cn.fengylb.mycommunity.mycommunity.mapper.UserMapper;
 import cn.fengylb.mycommunity.mycommunity.provider.GithubProvider;
 import cn.fengylb.mycommunity.mycommunity.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
@@ -38,6 +40,7 @@ public class AuthorizeController {
         accessTokenDTO.setCode(code);
         accessTokenDTO.setRedirect_uri(redirect_url);
         accessTokenDTO.setState(state);
+        log.info("client:{} client_secret:{} code:{} redirect_url:{} state:{}",client_id,client_secret,code,redirect_url,state);
         String accessToekn = githubProvider.getAccessToekn(accessTokenDTO);
         GithubUserDTO githubUserDTO = githubProvider.getUser(accessToekn);
         //System.out.println(githubUserDTO.getName());
