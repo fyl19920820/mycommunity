@@ -9,5 +9,6 @@ create table question
     comment_count int default 0,
     view_count int default 0,
     like_count int default 0,
+    account_id varchar(100),
     tag varchar(256)
 );
