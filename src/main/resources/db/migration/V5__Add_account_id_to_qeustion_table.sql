@@ -1,1 +1,0 @@
-alter table question add account_id varchar(100);

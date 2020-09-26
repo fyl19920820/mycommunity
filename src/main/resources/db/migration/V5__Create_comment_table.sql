@@ -8,4 +8,3 @@ create table comment
     gmt_modified bigint not null,
     like_count bigint default 0
 );
-alter table comment add content varchar(1024) null;
