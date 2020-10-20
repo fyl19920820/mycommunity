@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.util.Properties;
 @Component
-@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class }) })
+@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class ,Integer.class}) })
 public class TenantInterceptor implements Interceptor {
 
     @Override

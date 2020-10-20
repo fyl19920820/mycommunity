@@ -13,7 +13,7 @@ public class TenantControlInteceper implements MethodInterceptor {
             }
 
             System.out.println("控制器层面，，计算 tenant。。。");
-            String tenant = "";
+            String tenant = "communitydb2";
             TenantContextHolder.setTenant(tenant);
             return invocation.proceed();
         }finally {

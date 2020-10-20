@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -15,10 +16,10 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import javax.sql.DataSource;
 
-/*@Configuration
-@EnableTransactionManagement*/
-public class MyBatisConfig /*implements TransactionManagementConfigurer*/ {
-    /*@Autowired
+@Configuration
+@EnableTransactionManagement
+public class MyBatisConfig implements TransactionManagementConfigurer {
+    @Autowired
     private DataSource dataSource;
 
     @Override
@@ -29,9 +30,10 @@ public class MyBatisConfig /*implements TransactionManagementConfigurer*/ {
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactoryBean(TenantInterceptor tenantInterceptor) {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setDataSource(dataSource);
-        bean.setPlugins(new Interceptor[] { tenantInterceptor });
         try {
+            bean.setDataSource(dataSource);
+            bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
+            bean.setPlugins(new Interceptor[] { tenantInterceptor });
             return bean.getObject();
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,5 +44,5 @@ public class MyBatisConfig /*implements TransactionManagementConfigurer*/ {
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
-    }*/
+    }
 }
