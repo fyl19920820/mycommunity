@@ -8,17 +8,17 @@
     <context id="DB2Tables" targetRuntime="MyBatis3">
 
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
-        <jdbcConnection driverClass="org.h2.Driver"
-                        connectionURL="jdbc:h2:~/mycommunity"
-                        userId="sa"
-                        password="123">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://172.21.1.152:3306/uums_tenant"
+                        userId="root"
+                        password="root">
         </jdbcConnection>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="cn.fengylb.mycommunity.mycommunity.dto" targetProject="src\main\java">
+        <javaModelGenerator targetPackage="com.mininglamp.uums.db.model" targetProject="src\main\java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -27,14 +27,13 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.fengylb.mycommunity.mycommunity.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.mininglamp.uums.db.dao"
                              targetProject="src\main\java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User"></table>
-        <table tableName="question" domainObjectName="Question"></table>
-        <table tableName="comment" domainObjectName="Comment"></table>
-        <table tableName="notification" domainObjectName="Notification"></table>
+        <table tableName="product_dict" domainObjectName="ProductDictDO" mapperName="ProductDictMapper" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="tenant_product_relation" domainObjectName="TenantProductRelationDO" mapperName="TenantProductRelationMapper" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"></table>
+        <table tableName="tenant_resource_relation" domainObjectName="TenantResourceRelationDO" mapperName="TenantResourceRelationMapper" enableSelectByExample="false" enableDeleteByExample="false" enableCountByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false"></table>
     </context>
 </generatorConfiguration>
